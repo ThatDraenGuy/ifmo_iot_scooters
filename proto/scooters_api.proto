@@ -1,0 +1,7 @@
+syntax = "proto3";
+package io.dmtri.scooters.service;
+import "proto/model.proto";
+
+service ScootersApi {
+    rpc sendTelemetry(ScooterTelemetry) returns (ScooterTelemetryResponse);
+}

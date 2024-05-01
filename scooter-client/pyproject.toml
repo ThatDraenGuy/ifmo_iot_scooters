@@ -1,0 +1,36 @@
+[tool.poetry]
+name = "scooter-client"
+version = "0.1.0"
+description = ""
+authors = ["Dmitri Tsiu <dmitrimeowsalot@gmail.com>"]
+
+[tool.poetry.dependencies]
+python = "^3.11"
+config = "^0.5.1"
+pydantic-settings = "^2.2.1"
+
+
+[tool.poetry.group.dev.dependencies]
+pytest = "^8.2.0"
+pylint = "^3.1.0"
+isort = "^5.13.2"
+black = "^24.4.2"
+grpcio = "^1.63.0"
+grpcio-tools = "^1.63.0"
+
+[tool.pylint."MESSAGES CONTROL"]
+disable = [
+  "C0114",  # missing-module-docstring
+  "C0116",  # missing-function-docstring
+  "C0115",  # missing-class-docstring
+  "E0611",  # fix protobuf warnings
+]
+
+[tool.black]
+line-length = 100
+target-version = ['py311']
+preview = true
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
