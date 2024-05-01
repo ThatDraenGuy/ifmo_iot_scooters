@@ -3,5 +3,6 @@
   <component name="YaTool.Application.Settings">
     <option name="yaToolPath" value="/usr/local/bin/ya" />
     <option name="autoDownloadYaTool" value="true" />
+    <option name="enableKtlintFormatting" value="false" />
   </component>
 </project>

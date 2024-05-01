@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="RemoteRepositoriesConfiguration">
+    <remote-repository>
+      <option name="id" value="yandex_vertis_releases" />
+      <option name="name" value="yandex_vertis_releases" />
+      <option name="url" value="https://bucket.yandex-team.ru/v1/maven/yandex_vertis_releases/" />
+    </remote-repository>
+    <remote-repository>
+      <option name="id" value="yandex_infra" />
+      <option name="name" value="yandex_infra" />
+      <option name="url" value="https://bucket.yandex-team.ru/v1/maven/yandex_infra/" />
+    </remote-repository>
+    <remote-repository>
+      <option name="id" value="central" />
+      <option name="name" value="Central Repository" />
+      <option name="url" value="https://repo.maven.apache.org/maven2" />
+    </remote-repository>
+    <remote-repository>
+      <option name="id" value="thirdparty" />
+      <option name="name" value="thirdparty" />
+      <option name="url" value="https://bucket.yandex-team.ru/v1/maven/thirdparty" />
+    </remote-repository>
+    <remote-repository>
+      <option name="id" value="yandex_vertis_snapshots" />
+      <option name="name" value="yandex_vertis_snapshots" />
+      <option name="url" value="https://bucket.yandex-team.ru/v1/maven/yandex_vertis_snapshots/" />
+    </remote-repository>
+    <remote-repository>
+      <option name="id" value="yandex_passport" />
+      <option name="name" value="yandex_passport" />
+      <option name="url" value="https://bucket.yandex-team.ru/v1/maven/yandex_passport/" />
+    </remote-repository>
+    <remote-repository>
+      <option name="id" value="yandex_common_releases" />
+      <option name="name" value="yandex_common_releases" />
+      <option name="url" value="https://bucket.yandex-team.ru/v1/maven/yandex_common_releases/" />
+    </remote-repository>
+    <remote-repository>
+      <option name="id" value="central" />
+      <option name="name" value="Maven Central repository" />
+      <option name="url" value="https://repo1.maven.org/maven2" />
+    </remote-repository>
+    <remote-repository>
+      <option name="id" value="jboss.community" />
+      <option name="name" value="JBoss Community repository" />
+      <option name="url" value="https://repository.jboss.org/nexus/content/repositories/public/" />
+    </remote-repository>
+    <remote-repository>
+      <option name="id" value="yandex_media_releases" />
+      <option name="name" value="yandex_media_releases" />
+      <option name="url" value="https://bucket.yandex-team.ru/v1/maven/yandex_media_releases/" />
+    </remote-repository>
+    <remote-repository>
+      <option name="id" value="central" />
+      <option name="name" value="Mirror of maven central" />
+      <option name="url" value="https://bucket.yandex-team.ru/v1/maven/central" />
+    </remote-repository>
+  </component>
+</project>
