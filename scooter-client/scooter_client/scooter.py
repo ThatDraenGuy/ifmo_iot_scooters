@@ -64,7 +64,7 @@ class Scooter:
     def get_telemetry(self) -> ScooterTelemetry:
         return ScooterTelemetry(
             scooter_id=self.id,
-            timestamp=time(),
+            timestamp=int(time()),
             coordinates=Vector(x=self.x, y=self.y),
             speed=Vector(x=self.x_velocity, y=self.y_velocity),
         )
