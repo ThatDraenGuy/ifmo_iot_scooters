@@ -1,0 +1,15 @@
+version: '3'
+
+services:
+  # scooter-server:
+  #   image: imageName
+  #   container_name: scooter-server
+
+  scooter-fake-client:
+    build:
+      context: ./
+      dockerfile: docker/scooters-fake-client.Dockerfile
+    environment:
+      - server=http://scooter-server:6000
+    volumes:
+      - ./scooters-fake-client/.env:/.env
