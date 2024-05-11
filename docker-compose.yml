@@ -14,17 +14,30 @@ services:
         fluentd-address: localhost:24224
     depends_on:
       - fluent-bit
+    healthcheck:
+      test: "grpcurl -plaintext scooter-server:6000 io.dmtri.scooters.service.ScootersApi.ping"
+      interval: 10s
+      timeout: 5s
+      retries: 2
+      start_period: 10s
     env_file:
       - ./.env
       - ./.env.secrets
-#  scooter-fake-client:
-#    build:
-#      context: ./
-#      dockerfile: docker/scooters-fake-client.Dockerfile
-#    environment:
-#      - server=grpc://scooter-server:6000
-#    volumes:
-#      - ./scooters-fake-client/.env:/.env
+
+  scooter-fake-client:
+    build:
+      context: ./
+      dockerfile: docker/scooters-fake-client.Dockerfile
+    environment:
+      - server=grpc://scooter-server:6000
+    volumes:
+      - ./scooters-fake-client/.env:/.env
+    depends_on:
+      scooter-server:
+        condition: service_healthy
+    deploy:
+      replicas: 5
+
   fluent-bit:
     build:
       context: ./
