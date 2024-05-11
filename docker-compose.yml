@@ -8,6 +8,8 @@ services:
     container_name: scooter-server
     ports:
       - "6000:6000"
+    expose:
+      - "6001"
     logging:
       driver: fluentd
       options:
@@ -23,7 +25,6 @@ services:
     env_file:
       - ./.env
       - ./.env.secrets
-
   scooter-fake-client:
     build:
       context: ./
@@ -37,7 +38,6 @@ services:
         condition: service_healthy
     deploy:
       replicas: 5
-
   fluent-bit:
     build:
       context: ./
@@ -48,6 +48,14 @@ services:
       - ./fluent-bit/fluent-bit.conf:/fluent-bit/etc/fluent-bit.conf
       - ./fluent-bit/parsers.conf:/fluent-bit/etc/parsers.conf
       - ./fluent-bit/plugins.conf:/fluent-bit/etc/plugins.conf
+    env_file:
+      - ./.env
+      - ./.env.secrets
+  prometheus:
+    image: prom/prometheus
+    command: ["--enable-feature=expand-external-labels"]
+    volumes:
+      - ./prometheus/prometheus.yml:/prometheus/prometheus.yml
     env_file:
       - ./.env
       - ./.env.secrets

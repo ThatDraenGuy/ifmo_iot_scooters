@@ -5,7 +5,7 @@ from turtle import Turtle
 
 import grpc
 
-from proto.model_pb2 import ScooterTelemetry
+from proto.model_pb2 import ScooterTelemetry, ScooterStatusesRequest, ScooterStatusesResponse
 from proto.scooters_api_pb2_grpc import ScootersApiStub
 from scooter_client.settings import ScooterSettings
 from scooter_client.utils import speed
@@ -59,7 +59,8 @@ if __name__ == "__main__":
     client = ScootersApiStub(channel)
 
     while True:
-        statuses: list[ScooterTelemetry] = client.getStatuses()
+        response: ScooterStatusesResponse = client.getStatuses(ScooterStatusesRequest())
+        statuses = response.statuses
 
         index: dict[str, ScooterTelemetry] = {status.scooter_id: status for status in statuses}
 
@@ -75,8 +76,6 @@ if __name__ == "__main__":
                 continue
 
             status = index[scooter_id]
-            (t_x, t_y) = to_turtle(status.coordinates.x, status.coordinates.y, settings)
-
             draw_turtle(t, status)
 
         for status in statuses:
@@ -90,6 +89,9 @@ if __name__ == "__main__":
             draw_turtle(t, status)
             t.pendown()
 
+            turtles[status.scooter_id] = (t, 0)
+
             print(f"New scooter: {status.scooter_id}")
 
+        print("Finished round")
         sleep(0.01)

@@ -3,6 +3,7 @@ package io.dmtri.scooters;
 import io.dmtri.scooters.persistence.ScooterStatusDao;
 import io.dmtri.scooters.persistence.ydb.Ydb;
 import io.dmtri.scooters.persistence.ydb.YdbScooterStatusDao;
+import io.dmtri.scooters.prometheus.ServerMetrics;
 import io.grpc.Status;
 import io.dmtri.scooters.service.ScootersApiGrpc;
 import io.grpc.stub.StreamObserver;
@@ -45,6 +46,7 @@ public class ScootersApiImpl extends ScootersApiGrpc.ScootersApiImplBase {
     @Override
     public void sendTelemetry(Model.ScooterTelemetry request,
             StreamObserver<Model.ScooterTelemetryResponse> responseObserver) {
+        ServerMetrics.statusReceived.inc();
         handleFuture(scooterStatusDao.updateScooter(request), responseObserver,
                 result -> Model.ScooterTelemetryResponse.newBuilder().setMessage(result ? "ok" : "error").build());
     }

@@ -8,12 +8,12 @@ COPY ./scooters-proto-java/pom.xml /app/scooters-proto-java/pom.xml
 RUN mvn clean
 RUN mvn verify --fail-never
 RUN $JAVA_HOME/bin/jlink \
-    --add-modules java.base,java.xml,java.naming,java.desktop,java.sql \
-    --strip-debug \
-    --no-man-pages \
-    --no-header-files \
-    --compress=2 \
-    --output /javaruntime
+	 --add-modules java.base,java.xml,java.naming,java.desktop,java.sql,jdk.httpserver,java.management \
+	 --strip-debug \
+	 --no-man-pages \
+	 --no-header-files \
+	 --compress=2 \
+	 --output /javaruntime
 COPY ./scooters-server /app/scooters-server
 COPY ./scooters-proto-java /app/scooters-proto-java
 COPY ./proto /app/proto

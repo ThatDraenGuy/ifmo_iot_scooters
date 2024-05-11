@@ -35,7 +35,7 @@ public class YdbScooterStatusDao implements ScooterStatusDao {
 
     private CompletableFuture<Void> getScootersRec(TxControl<?> tx, List<Model.ScooterTelemetry> accumulator,
             String last_scooter_id) {
-        final String query = "DECLARE $last_scooter_id ASawefawe Utf8;" + "SELECT payload, scooter_id FROM " + tableName
+        final String query = "DECLARE $last_scooter_id AS Utf8;" + "SELECT payload, scooter_id FROM " + tableName
                 + " WHERE scooter_id > $last_scooter_id ORDER BY scooter_id ASC";
 
         return ctx.supplyResult(session -> session

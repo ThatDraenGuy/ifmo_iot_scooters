@@ -1,0 +1,15 @@
+global:
+  scrape_interval: 1s
+
+scrape_configs:
+  - job_name: api-server
+    static_configs:
+      - targets:
+          - "scooter-server:6001"
+
+remote_write:
+  - name: yc
+    bearer_token: "AQVNzkFzy3ZZp-D3xn22YT9ZcP99kM8_VZf6tHFJ"
+    url: "https://monitoring.api.cloud.yandex.net/prometheus/workspaces/monr3j89ast87fjqcsjo/api/v1/write"
+    metadata_config:
+      send_interval: 5s

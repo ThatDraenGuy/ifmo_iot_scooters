@@ -17,7 +17,7 @@ lint:
 
 pb: clean
 	mkdir proto
-	poetry run python -m grpc_tools.protoc -I=../proto --pyi_out=./proto --python_out=./proto --grpc_python_out=./proto $(PROTOS)
+	poetry run python -m grpc_tools.protoc -I=.. --pyi_out=./ --python_out=./ --grpc_python_out=./ $(PROTOS)
 
 clean:
 	rm -rf proto

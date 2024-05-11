@@ -1,6 +1,6 @@
 syntax = "proto3";
 package io.dmtri.scooters.service;
-import "model.proto";
+import "proto/model.proto";
 
 service ScootersApi {
     rpc ping(ScooterApiPingRequest) returns (ScooterApiPingResponse) {};
