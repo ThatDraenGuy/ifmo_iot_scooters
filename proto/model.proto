@@ -16,3 +16,9 @@ message ScooterTelemetry {
 message ScooterTelemetryResponse {
     string message = 1;
 }
+
+message ScooterStatusesRequest {}
+
+message ScooterStatusesResponse {
+    repeated ScooterTelemetry statuses = 1;
+}

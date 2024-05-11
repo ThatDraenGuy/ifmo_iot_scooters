@@ -3,5 +3,6 @@ package io.dmtri.scooters.service;
 import "model.proto";
 
 service ScootersApi {
-    rpc sendTelemetry(ScooterTelemetry) returns (ScooterTelemetryResponse);
+    rpc sendTelemetry(ScooterTelemetry) returns (ScooterTelemetryResponse) {};
+    rpc getStatuses(ScooterStatusesRequest) returns (ScooterStatusesResponse) {};
 }

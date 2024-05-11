@@ -4,3 +4,4 @@ scooter-client/proto
 .env.secrets
 *.iml
 target
+secrets.properties

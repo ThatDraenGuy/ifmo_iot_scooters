@@ -7,6 +7,7 @@ pub mod utils;
 
 use std::time::{Duration, SystemTime, UNIX_EPOCH};
 
+use rand::{thread_rng, RngCore};
 use scooters::scooters_api_client::*;
 use scooters::*;
 use tokio::time;
@@ -25,7 +26,7 @@ async fn main() -> AppResult<()> {
     let client = ScootersApiClient::connect(std::env::var("server")?).await?;
 
     let handle = tokio::spawn(client_loop(
-        1,
+        thread_rng().next_u64(),
         ScooterData::default(),
         ScooterStrategy::RandomStrategy(RandomStrategy {}),
         client.clone(),

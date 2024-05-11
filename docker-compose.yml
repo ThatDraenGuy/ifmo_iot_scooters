@@ -1,15 +1,31 @@
 version: '3'
 
 services:
-  # scooter-server:
-  #   image: imageName
-  #   container_name: scooter-server
-
+  scooter-server:
+    build:
+      context: ./
+      dockerfile: docker/scooters-api.Dockerfile
+    container_name: scooter-server
+    ports:
+      - "6000"
+    expose:
+      - 6000
+    logging:
+      driver: fluentd
+      options:
+        fluentd-address: localhost:24224
+    depends_on: fluentd
   scooter-fake-client:
     build:
       context: ./
       dockerfile: docker/scooters-fake-client.Dockerfile
     environment:
-      - server=http://scooter-server:6000
+      - server=grpc://scooter-server:6000
     volumes:
       - ./scooters-fake-client/.env:/.env
+  fluentd:
+    image: fluent/fluent-bit:latest
+    ports:
+      - "24224"
+    volumes:
+      - ./fluentd/fluent.conf:/fluent
