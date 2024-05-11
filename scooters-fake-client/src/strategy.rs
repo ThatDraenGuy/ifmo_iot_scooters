@@ -5,6 +5,8 @@ use crate::utils::random;
 
 use super::scooters::Vector;
 
+pub const BORDER: f32 = 1000.0;
+
 #[derive(Default)]
 pub struct ScooterData {
     speed: Vec2,
@@ -13,6 +15,15 @@ pub struct ScooterData {
 impl ScooterData {
     pub fn tick(&mut self, time_delta: f32) -> (Vector, Vector) {
         self.position += self.speed * time_delta;
+
+        if self.position.x.abs() > BORDER {
+            self.speed.x *= -1.0;
+            self.position.x = BORDER * self.position.x.signum();
+        }
+        if self.position.y.abs() > BORDER {
+            self.speed.y *= -1.0;
+            self.position.y = BORDER * self.position.y.signum();
+        }
 
         (self.position.into(), self.speed.into())
     }
@@ -34,7 +45,7 @@ pub struct RandomStrategy {
     time_remaining: f32,
 }
 impl RandomStrategy {
-    const MIN_AXIS_SPEED: f32 = 0.0;
+    const MIN_AXIS_SPEED: f32 = -8.33;
     const MAX_AXIS_SPEED: f32 = 8.33;
 }
 impl ScooterStrategyTrait for RandomStrategy {
