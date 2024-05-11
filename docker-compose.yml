@@ -14,7 +14,11 @@ services:
       driver: fluentd
       options:
         fluentd-address: localhost:24224
-    depends_on: fluentd
+    depends_on:
+      - fluent-bit
+    env_file:
+      - ./.env
+      - ./.env.secrets
   scooter-fake-client:
     build:
       context: ./
@@ -23,9 +27,16 @@ services:
       - server=grpc://scooter-server:6000
     volumes:
       - ./scooters-fake-client/.env:/.env
-  fluentd:
-    image: fluent/fluent-bit:latest
+  fluent-bit:
+    build:
+      context: ./
+      dockerfile: docker/fluent-bit.Dockerfile
     ports:
-      - "24224"
+      - "24224:24224"
     volumes:
-      - ./fluentd/fluent.conf:/fluent
+      - ./fluent-bit/fluent-bit.conf:/fluent-bit/etc/fluent-bit.conf
+      - ./fluent-bit/parsers.conf:/fluent-bit/etc/parsers.conf
+      - ./fluent-bit/plugins.conf:/fluent-bit/etc/plugins.conf
+    env_file:
+      - ./.env
+      - ./.env.secrets

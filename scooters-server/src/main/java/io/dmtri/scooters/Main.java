@@ -8,8 +8,12 @@ import io.dmtri.scooters.persistence.ydb.YdbScooterStatusDao;
 import io.grpc.Server;
 import io.grpc.ServerBuilder;
 import io.grpc.protobuf.services.ProtoReflectionService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 class Main {
+    private static final Logger logger = LoggerFactory.getLogger(Main.class);
+
     public static void main(String[] args) throws Exception {
         AppConfig config = AppConfigFactory.getAppConfig();
 
@@ -19,9 +23,8 @@ class Main {
             Server server = ServerBuilder.forPort(config.getGrpcConfig().getPort()).addService(apiImpl)
                     .addService(ProtoReflectionService.newInstance()).build();
             server.start();
-            System.out.println("Started server on port " + config.getGrpcConfig().getPort());
-            while (true) {
-            }
+            logger.info("Started server on port " + config.getGrpcConfig().getPort());
+            while (true) {}
         }
     }
 }
