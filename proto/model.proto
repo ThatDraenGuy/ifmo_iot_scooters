@@ -22,3 +22,9 @@ message ScooterStatusesRequest {}
 message ScooterStatusesResponse {
     repeated ScooterTelemetry statuses = 1;
 }
+
+message ScooterApiPingRequest {}
+
+message ScooterApiPingResponse {
+    string message = 1;
+}

@@ -37,6 +37,12 @@ public class ScootersApiImpl extends ScootersApiGrpc.ScootersApiImplBase {
     }
 
     @Override
+    public void ping(Model.ScooterApiPingRequest request, StreamObserver<Model.ScooterApiPingResponse> responseObserver) {
+        responseObserver.onNext(Model.ScooterApiPingResponse.newBuilder().setMessage("ok").build());
+        responseObserver.onCompleted();
+    }
+
+    @Override
     public void sendTelemetry(Model.ScooterTelemetry request,
             StreamObserver<Model.ScooterTelemetryResponse> responseObserver) {
         handleFuture(scooterStatusDao.updateScooter(request), responseObserver,
