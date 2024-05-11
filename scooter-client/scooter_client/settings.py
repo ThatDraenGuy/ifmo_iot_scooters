@@ -8,7 +8,6 @@ class ScooterSettings(BaseSettings):
     map_x_upper: int
     map_y_lower: int
     map_y_upper: int
-    max_speed: float
-    acceleration_range: float
-    secret: str
-    scooters_amount: int
+    lost_counter: int
+    grpc_host: str
+    grpc_port: int
