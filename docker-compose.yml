@@ -7,9 +7,7 @@ services:
       dockerfile: docker/scooters-api.Dockerfile
     container_name: scooter-server
     ports:
-      - "6000"
-    expose:
-      - 6000
+      - "6000:6000"
     logging:
       driver: fluentd
       options:
@@ -19,16 +17,14 @@ services:
     env_file:
       - ./.env
       - ./.env.secrets
-  scooter-fake-client:
-    build:
-      context: ./
-      dockerfile: docker/scooters-fake-client.Dockerfile
-    depends_on:
-      - scooter-server
-    environment:
-      - server=grpc://scooter-server:6000
-    volumes:
-      - ./scooters-fake-client/.env:/.env
+#  scooter-fake-client:
+#    build:
+#      context: ./
+#      dockerfile: docker/scooters-fake-client.Dockerfile
+#    environment:
+#      - server=grpc://scooter-server:6000
+#    volumes:
+#      - ./scooters-fake-client/.env:/.env
   fluent-bit:
     build:
       context: ./

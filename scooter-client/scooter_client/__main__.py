@@ -3,7 +3,10 @@ from random import random
 from time import sleep
 from turtle import Turtle
 
-from scooter_client.scooter import Scooter
+import grpc
+
+from proto.model_pb2 import ScooterTelemetry
+from proto.scooters_api_pb2_grpc import ScootersApiStub
 from scooter_client.settings import ScooterSettings
 from scooter_client.utils import speed
 
@@ -15,12 +18,31 @@ def to_turtle(x: float, y: float, scooter_settings: ScooterSettings) -> tuple[fl
     )
 
 
+def draw_turtle(turtle: Turtle, turtle_status: ScooterTelemetry):
+    (turtle_x, turtle_y) = to_turtle(
+        turtle_status.coordinates.x, turtle_status.coordinates.y, settings
+    )
+
+    new_speed = speed(turtle_status.speed.x, turtle_status.speed.y)
+
+    if new_speed != 0:
+        sign = 1 if turtle_status.speed.y >= 0 else -1
+        direction = (
+            degrees(
+                acos(turtle_status.speed.x / speed(turtle_status.speed.x, turtle_status.speed.y))
+            )
+            * sign
+        )
+        turtle.setheading(direction)
+
+    turtle.goto(turtle_x, turtle_y)
+
+
 if __name__ == "__main__":
     settings = ScooterSettings()
     print(settings.model_dump_json())
 
-    scooters: list[Scooter] = []
-    turtles: list[Turtle] = []
+    turtles: dict[str, tuple[Turtle, int]] = {}
 
     border_t = Turtle()
     border_t.speed(0)
@@ -33,27 +55,41 @@ if __name__ == "__main__":
     border_t.goto(*to_turtle(settings.map_x_lower, settings.map_y_upper, settings))
     border_t.hideturtle()
 
-    for i in range(settings.scooters_amount):
-        scooter = Scooter(settings)
-        t = Turtle()
-        t.speed(0)
-        t.color(random(), random(), random())
-        scooters.append(scooter)
-        turtles.append(t)
+    channel = grpc.insecure_channel(f"{settings.grpc_host}:{settings.grpc_port}")
+    client = ScootersApiStub(channel)
 
     while True:
-        for scooter, t in zip(scooters, turtles):
-            scooter.move()
-            (t_x, t_y) = to_turtle(scooter.x, scooter.y, settings)
+        statuses: list[ScooterTelemetry] = client.getStatuses()
 
-            SIGN = 1 if scooter.y_velocity >= 0 else -1
-            direction = (
-                degrees(acos(scooter.x_velocity / speed(scooter.x_velocity, scooter.y_velocity)))
-                * SIGN
-            )
+        index: dict[str, ScooterTelemetry] = {status.scooter_id: status for status in statuses}
 
-            t.goto(t_x, t_y)
-            t.setheading(direction)
+        for scooter_id, (t, lost_count) in turtles.items():
+            if scooter_id not in index:
+                if lost_count + 1 >= settings.lost_counter:
+                    t.reset()
+                    t.hideturtle()
+                    del turtles[scooter_id]
+                    print(f"Lost scooter: {scooter_id}")
+                else:
+                    turtles[scooter_id] = (t, lost_count + 1)
+                continue
 
-            print(scooter.get_telemetry())
+            status = index[scooter_id]
+            (t_x, t_y) = to_turtle(status.coordinates.x, status.coordinates.y, settings)
+
+            draw_turtle(t, status)
+
+        for status in statuses:
+            if status.scooter_id in turtles:
+                continue
+
+            t = Turtle()
+            t.speed(0)
+            t.color(random(), random(), random())
+            t.penup()
+            draw_turtle(t, status)
+            t.pendown()
+
+            print(f"New scooter: {status.scooter_id}")
+
         sleep(0.01)
