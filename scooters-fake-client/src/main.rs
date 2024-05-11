@@ -17,7 +17,8 @@ use strategy::*;
 
 type Client = ScootersApiClient<Channel>;
 type AppResult<T> = Result<T, anyhow::Error>;
-type Vec2 = [f32; 2];
+
+const INTERVAL: f32 = 0.5;
 
 #[tokio::main]
 async fn main() -> AppResult<()> {
@@ -28,7 +29,7 @@ async fn main() -> AppResult<()> {
     let handle = tokio::spawn(client_loop(
         thread_rng().next_u64(),
         ScooterData::default(),
-        ScooterStrategy::RandomStrategy(RandomStrategy {}),
+        ScooterStrategy::RandomStrategy(RandomStrategy::default()),
         client.clone(),
     ));
 
@@ -42,12 +43,12 @@ async fn client_loop(
     mut scooter_strategy: ScooterStrategy,
     mut client: Client,
 ) -> AppResult<()> {
-    let mut interval = time::interval(Duration::from_millis(500));
+    let mut interval = time::interval(Duration::from_secs_f32(INTERVAL));
 
     loop {
         interval.tick().await;
-        scooter_strategy.tick(&mut scooter_data);
-        let (coords, speed) = scooter_data.tick();
+        scooter_strategy.tick(&mut scooter_data, INTERVAL);
+        let (coords, speed) = scooter_data.tick(INTERVAL);
 
         let request = tonic::Request::new(ScooterTelemetry {
             scooter_id: id.to_string(),

@@ -23,6 +23,8 @@ services:
     build:
       context: ./
       dockerfile: docker/scooters-fake-client.Dockerfile
+    depends_on:
+      - scooter-server
     environment:
       - server=grpc://scooter-server:6000
     volumes:
