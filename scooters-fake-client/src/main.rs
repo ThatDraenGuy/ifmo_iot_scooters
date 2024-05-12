@@ -22,8 +22,6 @@ const INTERVAL: f32 = 0.5;
 
 #[tokio::main]
 async fn main() -> AppResult<()> {
-    dotenvy::dotenv()?;
-
     let client = ScootersApiClient::connect(std::env::var("server")?).await?;
 
     let handle = tokio::spawn(client_loop(
