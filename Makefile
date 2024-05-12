@@ -1,13 +1,30 @@
 REGISTRY=cr.yandex/crpvlbeg7ia4vj0j1o82
 
-build-push-api:
-	docker compose build
-	docker tag ifmo_iot_scooters-scooter-server $(REGISTRY)/scooter-server
+tasks = $(filter-out $@,$(MAKECMDGOALS))
+internalize = $(foreach wrd, $(1),$(wrd)-component)
+action = COMPONENT="$@" $(MAKE) $(call internalize, $(call tasks))
 
-build-push-fluent-bit:
-	docker compose build
-	docker tag ifmo_iot_scooters-fluent-bit $(REGISTRY)/fluent-bit
+push-component:
+	docker compose build $(COMPONENT)
+	docker tag ifmo_iot_scooters-$(COMPONENT) $(REGISTRY)/$(COMPONENT)
+	docker push $(REGISTRY)/$(COMPONENT):latest
 
-build-push-fake-client:
-	docker compose build
+%-component:
+	@echo
+	@echo Unknown command $@!
+	@echo
+	@exit 1
 
+scooter-server:
+	$(action)
+
+scooter-fake-client:
+	$(action)
+
+fluent-bit:
+	$(action)
+
+prometheus:
+	$(action)
+
+.PHONY: scooter-server fluent-bit prometheus scooter-fake-client push
