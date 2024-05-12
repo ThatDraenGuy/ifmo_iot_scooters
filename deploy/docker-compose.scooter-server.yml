@@ -1,0 +1,27 @@
+version: '3'
+
+services:
+  scooter-server:
+    image: cr.yandex/crpvlbeg7ia4vj0j1o82/scooter-server:${SCOOTER_SERVER_VERSION}
+    ports:
+      - "6000:6000"
+    expose:
+      - "6001"
+    logging:
+      driver: fluentd
+      options:
+        fluentd-address: localhost:24224
+    depends_on:
+      - fluent-bit
+    environment:
+      YDB_ENDPOINT: grpcs://ydb.serverless.yandexcloud.net:2135
+      YDB_DATABASE: /ru-central1/b1gi985am5ppj6fco282/etnfunoncbak6vm2jt54
+  fluent-bit:
+    image: cr.yandex/crpvlbeg7ia4vj0j1o82/fluent-bit:${FLUENT_BIT_VERSION}
+    ports:
+      - "24224:24224"
+  prometheus-agent:
+    image: cr.yandex/crpvlbeg7ia4vj0j1o82/prometheus-agent:${PROMETHEUS_AGENT_VERSION}
+    command: ["--enable-feature=agent"]
+    environment:
+      YC_API_KEY: ${YC_API_KEY}

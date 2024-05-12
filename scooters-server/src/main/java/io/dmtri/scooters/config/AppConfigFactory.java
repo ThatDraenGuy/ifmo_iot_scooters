@@ -16,6 +16,8 @@ public class AppConfigFactory {
     public static AppConfig getAppConfig() throws ConfigurationException {
         CompositeConfiguration config = new CompositeConfiguration();
 
+        config.getInterpolator().addDefaultLookup(new CustomEnvLookup());
+
         SystemConfiguration sysConfig = new SystemConfiguration();
         EnvironmentConfiguration envConfig = new EnvironmentConfiguration();
         PropertiesConfiguration secretsConfig = new Configurations().properties(secretsConfiguration);
@@ -24,8 +26,6 @@ public class AppConfigFactory {
         config.addConfiguration(envConfig);
         config.addConfiguration(secretsConfig);
         config.addConfiguration(basicConfig);
-
-        config.setThrowExceptionOnMissing(true);
 
         return AppConfig.fromConfiguration(config);
     }

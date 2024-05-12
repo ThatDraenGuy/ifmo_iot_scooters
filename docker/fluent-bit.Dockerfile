@@ -19,3 +19,6 @@ RUN CGO_ENABLED=1 go build \
 
 FROM fluent/fluent-bit:${fluent_bit_version} as fluent-bit
 COPY --from=builder /yc-logging.so /fluent-bit/bin/
+COPY ./fluent-bit/fluent-bit.conf /fluent-bit/etc/fluent-bit.conf
+COPY ./fluent-bit/parsers.conf /fluent-bit/etc/parsers.conf
+COPY ./fluent-bit/plugins.conf /fluent-bit/etc/plugins.conf

@@ -5,6 +5,8 @@ services:
     build:
       context: ./
       dockerfile: docker/scooters-api.Dockerfile
+      platforms:
+        - "linux/amd64"
     container_name: scooter-server
     ports:
       - "6000:6000"
@@ -29,6 +31,8 @@ services:
     build:
       context: ./
       dockerfile: docker/scooters-fake-client.Dockerfile
+      platforms:
+        - "linux/amd64"
     environment:
       - server=grpc://scooter-server:6000
     volumes:
@@ -42,6 +46,8 @@ services:
     build:
       context: ./
       dockerfile: docker/fluent-bit.Dockerfile
+      platforms:
+        - "linux/amd64"
     ports:
       - "24224:24224"
     volumes:
@@ -51,10 +57,12 @@ services:
     env_file:
       - ./.env
       - ./.env.secrets
-  prometheus:
+  prometheus-agent:
     build:
       context: ./
       dockerfile: docker/prometheus.Dockerfile
+      platforms:
+        - "linux/amd64"
     command: ["--enable-feature=agent"]
     volumes:
       - ./prometheus/prometheus.yml:/prometheus/prometheus.yml
