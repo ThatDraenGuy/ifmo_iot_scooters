@@ -68,6 +68,7 @@ async fn client_loop(
             coordinates: Some(coords),
             speed: Some(speed),
         });
-        client.send_telemetry(request).await?;
+        let resp = client.send_telemetry(request).await?;
+        scooter_data.slowdown(resp.get_ref().speed_limit);
     }
 }

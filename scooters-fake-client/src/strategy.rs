@@ -27,6 +27,11 @@ impl ScooterData {
 
         (self.position.into(), self.speed.into())
     }
+    pub fn slowdown(&mut self, speed_limit: f32) {
+        if self.speed.length() > speed_limit {
+            self.speed *= speed_limit / self.speed.length();
+        }
+    }
 }
 
 #[enum_dispatch]

@@ -14,7 +14,10 @@ message ScooterTelemetry {
 }
 
 message ScooterTelemetryResponse {
-    string message = 1;
+    reserved 1;
+    reserved "msg";
+    
+    float speed_limit = 2;
 }
 
 message ScooterStatusesRequest {}
