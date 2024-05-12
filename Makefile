@@ -34,7 +34,7 @@ scooter-server:
 	INSTANCE="$(YC_SCOOTER_SERVER_INSTANCE_NAME)" $(action)
 
 scooter-fake-client:
-	$(action)
+	INSTANCE="$(YC_SCOOTER_CLIENTS_INSTANCE_NAME)" $(action)
 
 fluent-bit:
 	$(action)

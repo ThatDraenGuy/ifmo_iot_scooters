@@ -8,9 +8,11 @@ import org.slf4j.LoggerFactory;
 import tech.ydb.table.SessionRetryContext;
 import tech.ydb.table.query.Params;
 import tech.ydb.table.result.ResultSetReader;
+import tech.ydb.table.settings.ExecuteDataQuerySettings;
 import tech.ydb.table.transaction.TxControl;
 import tech.ydb.table.values.PrimitiveValue;
 
+import java.time.Duration;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
@@ -86,11 +88,13 @@ public class YdbScooterStatusDao implements ScooterStatusDao {
         final String query = "DECLARE $scooter_id AS Utf8;" + "DECLARE $payload AS String;"
                 + "DECLARE $timestamp AS Uint64;" + "REPLACE INTO " + tableName + "(scooter_id, payload, update_ts)"
                 + "VALUES ($scooter_id, $payload, $timestamp)";
+        ExecuteDataQuerySettings settings = new ExecuteDataQuerySettings();
+        settings.setCancelAfter(Duration.ofMillis(500));
 
         return ctx.supplyResult(session -> session.executeDataQuery(query, TxControl.serializableRw(),
                 Params.of("$scooter_id", PrimitiveValue.newText(status.getScooterId()), "$payload",
                         PrimitiveValue.newBytes(status.toByteArray()), "$timestamp",
-                        PrimitiveValue.newUint64(status.getTimestamp()))))
+                        PrimitiveValue.newUint64(status.getTimestamp())), settings))
                 .thenApply(result -> {
                     result.getStatus().expectSuccess("failed to update scooter status");
                     return result.getStatus().isSuccess();

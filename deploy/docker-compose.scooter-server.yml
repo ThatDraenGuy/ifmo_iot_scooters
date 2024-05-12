@@ -22,6 +22,6 @@ services:
       - "24224:24224"
   prometheus-agent:
     image: cr.yandex/crpvlbeg7ia4vj0j1o82/prometheus-agent:${PROMETHEUS_AGENT_VERSION}
-    command: ["--enable-feature=agent"]
+    command: ["--enable-feature=agent", "--log.level=debug"]
     environment:
       YC_API_KEY: ${YC_API_KEY}
