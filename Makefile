@@ -6,8 +6,8 @@ action = COMPONENT="$@" $(MAKE) $(call internalize, $(call tasks))
 
 push-component:
 	docker compose build $(COMPONENT)
-	docker tag ifmo_iot_scooters-$(COMPONENT) $(REGISTRY)/$(COMPONENT)
-	docker push $(REGISTRY)/$(COMPONENT):latest
+	docker tag ifmo_iot_scooters-$(COMPONENT) $(REGISTRY)/$(COMPONENT):$(shell date +"%Y%m%d.%H%M%S")-$(shell whoami)
+	docker push $(REGISTRY)/$(COMPONENT):$(shell date +"%Y%m%d.%H%M%S")-$(shell whoami)
 
 %-component:
 	@echo
