@@ -4,8 +4,8 @@ services:
   scooter-fake-client:
     image: cr.yandex/crpvlbeg7ia4vj0j1o82/scooter-fake-client:${SCOOTER_FAKE_CLIENT_VERSION}
     environment:
-      server: ${SCOOTER_SERVER}
-      interval: ${TELEMETRY_INTERVAL}
+      SERVER: ${SCOOTER_SERVER}
+      INTERVAL: ${TELEMETRY_INTERVAL}
     deploy:
       replicas: 100
     restart: always
