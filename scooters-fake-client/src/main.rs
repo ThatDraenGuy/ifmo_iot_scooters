@@ -25,6 +25,12 @@ struct Config {
     pub interval: f32,
     #[envconfig(from = "SERVER")]
     pub server: String,
+    #[envconfig(from = "MIN_SPEED")]
+    pub min_speed: f32,
+    #[envconfig(from = "MAX_SPEED")]
+    pub max_speed: f32,
+    #[envconfig(from = "BORDER_RADIUS")]
+    pub border_radius: f32,
 }
 
 #[tokio::main]
@@ -36,8 +42,8 @@ async fn main() -> AppResult<()> {
     let handle = tokio::spawn(client_loop(
         thread_rng().next_u64(),
         config.interval,
-        ScooterData::default(),
-        ScooterStrategy::RandomStrategy(RandomStrategy::default()),
+        ScooterData::new(config.border_radius),
+        ScooterStrategy::RandomStrategy(RandomStrategy::new(config.min_speed, config.max_speed)),
         client.clone(),
     ));
 

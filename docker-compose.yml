@@ -36,6 +36,9 @@ services:
     environment:
       - SERVER=grpc://scooter-server:6000
       - INTERVAL=1.0
+      - MIN_SPEED=0.0
+      - MAX_SPEED=8.33
+      - BORDER_RADIUS=1000.0
     depends_on:
       scooter-server:
         condition: service_healthy
