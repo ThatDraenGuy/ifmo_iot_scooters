@@ -9,7 +9,7 @@ scrape_configs:
 
 remote_write:
   - name: yc
-    bearer_token: "AQVNzkFzy3ZZp-D3xn22YT9ZcP99kM8_VZf6tHFJ"
+    bearer_token_file: /tmp/token_file
     url: "https://monitoring.api.cloud.yandex.net/prometheus/workspaces/monr3j89ast87fjqcsjo/api/v1/write"
     metadata_config:
       send_interval: 5s

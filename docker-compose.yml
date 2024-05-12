@@ -25,19 +25,19 @@ services:
     env_file:
       - ./.env
       - ./.env.secrets
-  scooter-fake-client:
-    build:
-      context: ./
-      dockerfile: docker/scooters-fake-client.Dockerfile
-    environment:
-      - server=grpc://scooter-server:6000
-    volumes:
-      - ./scooters-fake-client/.env:/.env
-    depends_on:
-      scooter-server:
-        condition: service_healthy
-    deploy:
-      replicas: 5
+#  scooter-fake-client:
+#    build:
+#      context: ./
+#      dockerfile: docker/scooters-fake-client.Dockerfile
+#    environment:
+#      - server=grpc://scooter-server:6000
+#    volumes:
+#      - ./scooters-fake-client/.env:/.env
+#    depends_on:
+#      scooter-server:
+#        condition: service_healthy
+#    deploy:
+#      replicas: 5
   fluent-bit:
     build:
       context: ./
@@ -52,8 +52,10 @@ services:
       - ./.env
       - ./.env.secrets
   prometheus:
-    image: prom/prometheus
-    command: ["--enable-feature=expand-external-labels"]
+    build:
+      context: ./
+      dockerfile: docker/prometheus.Dockerfile
+    command: ["--enable-feature=agent"]
     volumes:
       - ./prometheus/prometheus.yml:/prometheus/prometheus.yml
     env_file:
