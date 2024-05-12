@@ -88,13 +88,11 @@ public class YdbScooterStatusDao implements ScooterStatusDao {
         final String query = "DECLARE $scooter_id AS Utf8;" + "DECLARE $payload AS String;"
                 + "DECLARE $timestamp AS Uint64;" + "REPLACE INTO " + tableName + "(scooter_id, payload, update_ts)"
                 + "VALUES ($scooter_id, $payload, $timestamp)";
-        ExecuteDataQuerySettings settings = new ExecuteDataQuerySettings();
-        settings.setCancelAfter(Duration.ofMillis(500));
 
         return ctx.supplyResult(session -> session.executeDataQuery(query, TxControl.serializableRw(),
                 Params.of("$scooter_id", PrimitiveValue.newText(status.getScooterId()), "$payload",
                         PrimitiveValue.newBytes(status.toByteArray()), "$timestamp",
-                        PrimitiveValue.newUint64(status.getTimestamp())), settings))
+                        PrimitiveValue.newUint64(status.getTimestamp()))))
                 .thenApply(result -> {
                     result.getStatus().expectSuccess("failed to update scooter status");
                     return result.getStatus().isSuccess();

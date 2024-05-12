@@ -29,7 +29,7 @@ public class Ydb implements AutoCloseable {
 
         this.transport = GrpcTransport.forEndpoint(ydbConfig.endpoint(), ydbConfig.database())
                 .withAuthProvider(authProvider).build();
-        this.client = TableClient.newClient(transport).build();
+        this.client = TableClient.newClient(transport).sessionPoolSize(200, 500).build();
         this.retryContext = SessionRetryContext.create(this.client).maxRetries(3).build();
     }
 
