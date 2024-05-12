@@ -34,9 +34,8 @@ services:
       platforms:
         - "linux/amd64"
     environment:
-      - server=grpc://scooter-server:6000
-    volumes:
-      - ./scooters-fake-client/.env:/.env
+      - SERVER=grpc://scooter-server:6000
+      - INTERVAL=1.0
     depends_on:
       scooter-server:
         condition: service_healthy
