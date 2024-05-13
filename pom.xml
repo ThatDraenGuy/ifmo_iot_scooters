@@ -14,8 +14,10 @@
     </properties>
 
     <modules>
+        <module>scooters-core</module>
         <module>scooters-server</module>
         <module>scooters-proto-java</module>
+        <module>scooters-map-api</module>
     </modules>
 
     <build>

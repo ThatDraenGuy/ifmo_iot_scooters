@@ -2,13 +2,13 @@ package io.dmtri.scooters;
 
 import io.dmtri.scooters.config.AppConfig;
 import io.dmtri.scooters.config.AppConfigFactory;
+import io.dmtri.scooters.config.ConfigFactory;
 import io.dmtri.scooters.persistence.ScooterStatusDao;
 import io.dmtri.scooters.persistence.ydb.Ydb;
 import io.dmtri.scooters.persistence.ydb.YdbScooterStatusDao;
 import io.dmtri.scooters.prometheus.MetricsInterceptor;
 import io.grpc.Server;
 import io.grpc.ServerBuilder;
-import io.grpc.ServerInterceptor;
 import io.grpc.ServerInterceptors;
 import io.grpc.protobuf.services.ProtoReflectionService;
 import io.prometheus.metrics.exporter.httpserver.HTTPServer;
@@ -20,7 +20,7 @@ class Main {
     private static final Logger logger = LoggerFactory.getLogger(Main.class);
 
     public static void main(String[] args) throws Exception {
-        AppConfig config = AppConfigFactory.getAppConfig();
+        AppConfig config = new AppConfigFactory().getAppConfig();
 
         // Metrics
         JvmMetrics.builder().register();

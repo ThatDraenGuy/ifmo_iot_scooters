@@ -1,16 +1,13 @@
 package io.dmtri.scooters;
 
 import io.dmtri.scooters.persistence.ScooterStatusDao;
-import io.dmtri.scooters.persistence.ydb.Ydb;
-import io.dmtri.scooters.persistence.ydb.YdbScooterStatusDao;
-import io.dmtri.scooters.prometheus.ServerMetrics;
+import io.dmtri.scooters.prometheus.ScooterApiMetrics;
 import io.grpc.Status;
 import io.dmtri.scooters.service.ScootersApiGrpc;
 import io.grpc.stub.StreamObserver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Function;
 
@@ -46,7 +43,7 @@ public class ScootersApiImpl extends ScootersApiGrpc.ScootersApiImplBase {
     @Override
     public void sendTelemetry(Model.ScooterTelemetry request,
             StreamObserver<Model.ScooterTelemetryResponse> responseObserver) {
-        ServerMetrics.statusReceived.inc();
+        ScooterApiMetrics.statusReceived.inc();
         handleFuture(scooterStatusDao.updateScooter(request), responseObserver,
                 result -> Model.ScooterTelemetryResponse.newBuilder().setSpeedLimit(1000).build());
     }

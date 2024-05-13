@@ -11,6 +11,8 @@
         <outputRelativeToContentRoot value="true" />
         <module name="scooters-server" />
         <module name="scooters-proto-java" />
+        <module name="scooters-map-api" />
+        <module name="scooters-core" />
       </profile>
     </annotationProcessing>
   </component>

@@ -1,9 +1,14 @@
 syntax = "proto3";
 package io.dmtri.scooters.service;
 import "proto/model.proto";
+import "proto/map_model.proto";
 
 service ScootersApi {
     rpc ping(ScooterApiPingRequest) returns (ScooterApiPingResponse) {};
     rpc sendTelemetry(ScooterTelemetry) returns (ScooterTelemetryResponse) {};
     rpc getStatuses(ScooterStatusesRequest) returns (ScooterStatusesResponse) {};
+}
+
+service ScootersMapApi {
+    rpc getSpeedLimitedZones(map.GetSpeedLimitedZonesRequest) returns (map.SpeedLimitedZones);
 }

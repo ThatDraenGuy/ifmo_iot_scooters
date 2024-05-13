@@ -2,7 +2,7 @@ package io.dmtri.scooters.prometheus;
 
 import io.prometheus.metrics.core.metrics.Counter;
 
-public class ServerMetrics {
+public class ScooterApiMetrics {
     public static final Counter statusReceived =
             Counter
                     .builder()

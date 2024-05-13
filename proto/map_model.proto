@@ -1,0 +1,19 @@
+syntax = "proto3";
+package io.dmtri.scooters.map;
+import "proto/model.proto";
+
+message BoundingBox {
+  Vector top_left_corner = 1;
+  Vector bottom_right_corner = 2;
+}
+
+message SpeedLimitZone {
+  BoundingBox area = 1;
+  float speed_limit = 2;
+}
+
+message GetSpeedLimitedZonesRequest {}
+
+message SpeedLimitedZones {
+  repeated SpeedLimitZone zones = 1;
+}
