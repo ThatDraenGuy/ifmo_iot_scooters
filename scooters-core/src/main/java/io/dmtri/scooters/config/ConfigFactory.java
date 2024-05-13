@@ -10,7 +10,7 @@ public abstract class ConfigFactory<T> {
     private static URL basicConfiguration = ConfigFactory.class.getResource("/config.properties");
     private static URL secretsConfiguration = ConfigFactory.class.getResource("/secrets.properties");
 
-    public T getAppConfig() throws ConfigurationException {
+    public T getConfig() throws ConfigurationException {
         CompositeConfiguration config = new CompositeConfiguration();
 
         config.getInterpolator().addDefaultLookup(new CustomEnvLookup());

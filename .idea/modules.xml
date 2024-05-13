@@ -3,6 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/scooter-client/scooter-client.iml" filepath="$PROJECT_DIR$/scooter-client/scooter-client.iml" />
+      <module fileurl="file://$PROJECT_DIR$/scooters-map-api/scooters-map-api.iml" filepath="$PROJECT_DIR$/scooters-map-api/scooters-map-api.iml" />
     </modules>
   </component>
 </project>

@@ -14,26 +14,13 @@
     <dependencies>
         <dependency>
             <groupId>io.dmtri.scooters</groupId>
-            <artifactId>scooters-proto-java</artifactId>
+            <artifactId>scooters-core</artifactId>
             <version>0.1-SNAPSHOT</version>
         </dependency>
         <dependency>
-            <groupId>org.apache.commons</groupId>
-            <artifactId>commons-configuration2</artifactId>
-            <version>2.10.1</version>
-        </dependency>
-        <dependency>
-            <groupId>commons-beanutils</groupId>
-            <artifactId>commons-beanutils</artifactId>
-            <version>1.9.4</version>
-        </dependency>
-        <dependency>
-            <groupId>tech.ydb</groupId>
-            <artifactId>ydb-sdk-table</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>tech.ydb.auth</groupId>
-            <artifactId>yc-auth-provider</artifactId>
+            <groupId>io.dmtri.scooters</groupId>
+            <artifactId>scooters-proto-java</artifactId>
+            <version>0.1-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>ch.qos.logback</groupId>

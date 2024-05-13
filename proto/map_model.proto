@@ -8,12 +8,13 @@ message BoundingBox {
 }
 
 message SpeedLimitZone {
-  BoundingBox area = 1;
+  BoundingBox box = 1;
   float speed_limit = 2;
 }
 
 message GetSpeedLimitedZonesRequest {}
 
 message SpeedLimitedZones {
-  repeated SpeedLimitZone zones = 1;
+  uint64 version = 1;
+  repeated SpeedLimitZone zones = 2;
 }
