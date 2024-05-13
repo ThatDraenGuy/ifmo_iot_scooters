@@ -5,6 +5,7 @@ services:
     image: cr.yandex/crpvlbeg7ia4vj0j1o82/scooter-server:${SCOOTER_SERVER_VERSION}
     ports:
       - "6000:6000"
+      - "127.0.0.1:6001:6001"
     expose:
       - "6001"
     logging:
@@ -19,9 +20,9 @@ services:
   fluent-bit:
     image: cr.yandex/crpvlbeg7ia4vj0j1o82/fluent-bit:${FLUENT_BIT_VERSION}
     ports:
-      - "24224:24224"
+      - "127.0.0.1:24224:24224"
   prometheus-agent:
     image: cr.yandex/crpvlbeg7ia4vj0j1o82/prometheus-agent:${PROMETHEUS_AGENT_VERSION}
-    command: ["--enable-feature=agent", "--log.level=debug"]
+    command: ["--log.level=debug"]
     environment:
       YC_API_KEY: ${YC_API_KEY}

@@ -55,21 +55,6 @@
       <artifactId>prometheus-metrics-exporter-httpserver</artifactId>
       <version>1.0.0</version>
     </dependency>
-    <dependency>
-      <groupId>io.prometheus</groupId>
-      <artifactId>prometheus-metrics-instrumentation-jvm</artifactId>
-      <version>1.0.0</version>
-    </dependency>
-    <dependency>
-      <groupId>me.dinowernli</groupId>
-      <artifactId>java-grpc-prometheus</artifactId>
-      <version>0.6.0</version>
-    </dependency>
-    <dependency>
-      <groupId>io.prometheus</groupId>
-      <artifactId>prometheus-metrics-simpleclient-bridge</artifactId>
-      <version>1.0.0</version>
-    </dependency>
   </dependencies>
 
   <build>

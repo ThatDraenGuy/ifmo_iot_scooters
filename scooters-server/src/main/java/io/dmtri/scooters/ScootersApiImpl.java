@@ -48,7 +48,7 @@ public class ScootersApiImpl extends ScootersApiGrpc.ScootersApiImplBase {
             StreamObserver<Model.ScooterTelemetryResponse> responseObserver) {
         ServerMetrics.statusReceived.inc();
         handleFuture(scooterStatusDao.updateScooter(request), responseObserver,
-                result -> Model.ScooterTelemetryResponse.newBuilder().setMessage(result ? "ok" : "error").build());
+                result -> Model.ScooterTelemetryResponse.newBuilder().setSpeedLimit(1000).build());
     }
 
     @Override
