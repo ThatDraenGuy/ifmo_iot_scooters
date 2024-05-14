@@ -6,6 +6,9 @@ services:
     environment:
       SERVER: ${SCOOTER_SERVER}
       INTERVAL: ${TELEMETRY_INTERVAL}
+      MAX_SPEED: 20
+      MIN_SPEED: 20
+      BORDER_RADIUS: ${MAP_SIZE}
     deploy:
       replicas: 100
     restart: always

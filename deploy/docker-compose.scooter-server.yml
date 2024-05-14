@@ -5,24 +5,51 @@ services:
     image: cr.yandex/crpvlbeg7ia4vj0j1o82/scooter-server:${SCOOTER_SERVER_VERSION}
     ports:
       - "6000:6000"
-      - "127.0.0.1:6001:6001"
     expose:
       - "6001"
     logging:
       driver: fluentd
       options:
         fluentd-address: localhost:24224
+        tag: java.scooter-server
     depends_on:
       - fluent-bit
     environment:
-      YDB_ENDPOINT: grpcs://ydb.serverless.yandexcloud.net:2135
-      YDB_DATABASE: /ru-central1/b1gi985am5ppj6fco282/etnfunoncbak6vm2jt54
+      YDB_ENDPOINT: ${YDB_ENDPOINT}
+      YDB_DATABASE: ${YDB_DATABASE}
+    restart: always
+  scooter-map-api:
+    image: cr.yandex/crpvlbeg7ia4vj0j1o82/scooter-map-api:${SCOOTER_MAP_API_VERSION}
+    expose:
+      - "6000"
+      - "6001"
+    depends_on:
+      - fluent-bit
+    logging:
+      driver: fluentd
+      options:
+        fluentd-address: localhost:24224
+        tag: java.scooter-map-api
+    environment:
+      MAP_REGENERATION_INTERVAL_MILLIS: ${MAP_REGENERATION_INTERVAL_MILLIS}
+      MAP_SIZE: ${MAP_SIZE}
+      MAP_MIN_ZONES: ${MAP_MIN_ZONES}
+      MAP_MAX_ZONES: ${MAP_MAX_ZONES}
+      MAP_MIN_ZONE_SIZE: ${MAP_MIN_ZONE_SIZE}
+      MAP_MAX_ZONE_SIZE: ${MAP_MAX_ZONE_SIZE}
+      MAP_MIN_SPEED_LIMIT: ${MAP_MIN_SPEED_LIMIT}
+      MAP_MAX_SPEED_LIMIT: ${MAP_MAX_SPEED_LIMIT}
+    restart: always
   fluent-bit:
     image: cr.yandex/crpvlbeg7ia4vj0j1o82/fluent-bit:${FLUENT_BIT_VERSION}
     ports:
       - "127.0.0.1:24224:24224"
+    restart: always
   prometheus-agent:
     image: cr.yandex/crpvlbeg7ia4vj0j1o82/prometheus-agent:${PROMETHEUS_AGENT_VERSION}
-    command: ["--log.level=debug"]
+    command: ["--enable-feature=agent"]
+    ports:
+      - "9090:9090"
     environment:
       YC_API_KEY: ${YC_API_KEY}
+    restart: always

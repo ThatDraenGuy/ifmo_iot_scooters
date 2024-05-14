@@ -33,6 +33,9 @@ deploy-component:
 scooter-server:
 	INSTANCE="$(YC_SCOOTER_SERVER_INSTANCE_NAME)" $(action)
 
+scooter-map-api:
+	$(action)
+
 scooter-fake-client:
 	INSTANCE="$(YC_SCOOTER_CLIENTS_INSTANCE_NAME)" $(action)
 
@@ -42,4 +45,4 @@ fluent-bit:
 prometheus-agent:
 	$(action)
 
-.PHONY: scooter-server fluent-bit prometheus scooter-fake-client push
+.PHONY: scooter-server scooter-map-api fluent-bit prometheus scooter-fake-client push

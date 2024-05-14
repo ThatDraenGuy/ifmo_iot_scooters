@@ -16,6 +16,7 @@ services:
       driver: fluentd
       options:
         fluentd-address: localhost:24224
+        tag: java.scooter-server
     depends_on:
       - fluent-bit
     healthcheck:
@@ -24,6 +25,25 @@ services:
       timeout: 5s
       retries: 2
       start_period: 10s
+    env_file:
+      - ./.env
+      - ./.env.secrets
+  scooter-map-api:
+    build:
+      context: ./
+      dockerfile: docker/scooter-map-api.Dockerfile
+      platforms:
+        - "linux/amd64"
+    expose:
+      - "6000"
+      - "6001"
+    logging:
+      driver: fluentd
+      options:
+        fluentd-address: localhost:24224
+        tag: java.scooter-map-api
+    depends_on:
+      - fluent-bit
     env_file:
       - ./.env
       - ./.env.secrets
@@ -65,7 +85,9 @@ services:
       dockerfile: docker/prometheus.Dockerfile
       platforms:
         - "linux/amd64"
-    command: ["--enable-feature=agent"]
+    ports:
+      - "9090:9090"
+    command: ["--log.level=debug"]
     volumes:
       - ./prometheus/prometheus.yml:/prometheus/prometheus.yml
     env_file:

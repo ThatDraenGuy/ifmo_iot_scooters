@@ -16,7 +16,7 @@ COPY ./scooters-server/pom.xml /app/scooters-server/pom.xml
 COPY ./scooters-proto-java/pom.xml /app/scooters-proto-java/pom.xml
 RUN mvn clean
 RUN mvn verify --fail-never
-COPY ./scooters-server /app/scooters-server
+COPY ./scooters-map-api /app/scooters-map-api
 COPY ./scooters-proto-java /app/scooters-proto-java
 COPY ./proto /app/proto
 RUN mvn package
@@ -30,6 +30,6 @@ RUN curl -sSL "https://github.com/fullstorydev/grpcurl/releases/download/v1.8.6/
 ENV JAVA_HOME=/opt/java/openjdk
 ENV PATH "${JAVA_HOME}/bin:${PATH}"
 COPY --from=builder /javaruntime $JAVA_HOME
-COPY --from=builder /app/scooters-server/target/scooters-server-0.1-SNAPSHOT.jar /app.jar
+COPY --from=builder /app/scooters-map-api/target/scooters-map-api-0.1-SNAPSHOT.jar /app.jar
 
 CMD ["java", "-jar", "/app.jar"]

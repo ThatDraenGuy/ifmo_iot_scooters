@@ -29,7 +29,7 @@ struct Config {
     pub min_speed: f32,
     #[envconfig(from = "MAX_SPEED")]
     pub max_speed: f32,
-    #[envconfig(from = "BORDER_RADIUS")]
+    #[envconfig(from = "MAP_SIZE")]
     pub border_radius: f32,
 }
 
