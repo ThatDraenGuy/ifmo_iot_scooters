@@ -1,8 +1,11 @@
 package io.dmtri.scooters;
 
+import io.dmtri.scooters.clients.MapApiClient;
+import io.dmtri.scooters.map.MapModel;
 import io.dmtri.scooters.persistence.ScooterStatusDao;
 import io.dmtri.scooters.prometheus.ScooterApiMetrics;
 import io.dmtri.scooters.utils.VectorLength;
+import io.dmtri.scooters.utils.ZoneUtils;
 import io.grpc.Status;
 import io.dmtri.scooters.service.ScootersApiGrpc;
 import io.grpc.stub.StreamObserver;
@@ -15,9 +18,11 @@ import java.util.function.Function;
 public class ScootersApiImpl extends ScootersApiGrpc.ScootersApiImplBase {
     private static final Logger logger = LoggerFactory.getLogger(ScootersApiImpl.class);
     private final ScooterStatusDao scooterStatusDao;
+    private final MapApiClient mapApiClient;
 
-    public ScootersApiImpl(ScooterStatusDao scooterStatusDao) {
+    public ScootersApiImpl(ScooterStatusDao scooterStatusDao, MapApiClient mapApiClient) {
         this.scooterStatusDao = scooterStatusDao;
+        this.mapApiClient = mapApiClient;
     }
 
     private <T, U> void handleFuture(CompletableFuture<T> future, StreamObserver<U> responseObserver,
@@ -46,8 +51,18 @@ public class ScootersApiImpl extends ScootersApiGrpc.ScootersApiImplBase {
                               StreamObserver<Model.ScooterTelemetryResponse> responseObserver) {
         ScooterApiMetrics.statusReceived.labelValues(request.getScooterId()).inc();
         ScooterApiMetrics.scootersSpeed.observe(VectorLength.calculateLength(request.getSpeed()));
+
+        float newSpeedLimit = 1000;
+        MapModel.SpeedLimitedZones zones = mapApiClient.getSpeedLimitedZones();
+
+        for (MapModel.SpeedLimitZone zone : zones.getZonesList()) {
+            if (!ZoneUtils.vectorInZone(request.getCoordinates(), zone.getBox())) continue;
+            newSpeedLimit = Math.min(newSpeedLimit, zone.getSpeedLimit());
+        }
+
+        float finalNewSpeedLimit = newSpeedLimit;
         handleFuture(scooterStatusDao.updateScooter(request), responseObserver,
-                result -> Model.ScooterTelemetryResponse.newBuilder().setSpeedLimit(1000).build());
+                result -> Model.ScooterTelemetryResponse.newBuilder().setSpeedLimit(finalNewSpeedLimit).build());
     }
 
     @Override
@@ -55,5 +70,11 @@ public class ScootersApiImpl extends ScootersApiGrpc.ScootersApiImplBase {
                             StreamObserver<Model.ScooterStatusesResponse> responseObserver) {
         handleFuture(scooterStatusDao.getScooters(), responseObserver,
                 result -> Model.ScooterStatusesResponse.newBuilder().addAllStatuses(result).build());
+    }
+
+    @Override
+    public void getSpeedLimitedZones(MapModel.GetSpeedLimitedZonesRequest request, StreamObserver<MapModel.SpeedLimitedZones> responseObserver) {
+        responseObserver.onNext(mapApiClient.getSpeedLimitedZones());
+        responseObserver.onCompleted();
     }
 }

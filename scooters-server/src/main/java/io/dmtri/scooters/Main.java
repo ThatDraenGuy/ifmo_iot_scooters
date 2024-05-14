@@ -1,14 +1,15 @@
 package io.dmtri.scooters;
 
+import io.dmtri.scooters.clients.CachedMapApiClient;
+import io.dmtri.scooters.clients.MapApiClient;
 import io.dmtri.scooters.config.AppConfig;
 import io.dmtri.scooters.config.AppConfigFactory;
 import io.dmtri.scooters.persistence.ScooterStatusDao;
 import io.dmtri.scooters.persistence.ydb.Ydb;
 import io.dmtri.scooters.persistence.ydb.YdbScooterStatusDao;
 import io.dmtri.scooters.prometheus.MetricsInterceptor;
-import io.grpc.Server;
-import io.grpc.ServerBuilder;
-import io.grpc.ServerInterceptors;
+import io.dmtri.scooters.service.ScootersMapApiGrpc;
+import io.grpc.*;
 import io.grpc.protobuf.services.ProtoReflectionService;
 import io.prometheus.metrics.exporter.httpserver.HTTPServer;
 import io.prometheus.metrics.instrumentation.jvm.JvmMetrics;
@@ -21,6 +22,12 @@ class Main {
     public static void main(String[] args) throws Exception {
         AppConfig config = new AppConfigFactory().getConfig();
 
+        Channel mapApiChannel = ManagedChannelBuilder
+                .forAddress(config.mapApiConfig().host(), config.mapApiConfig().port())
+                .usePlaintext()
+                .build();
+        MapApiClient mapApiClient = new CachedMapApiClient(ScootersMapApiGrpc.newBlockingStub(mapApiChannel));
+
         // Metrics
         JvmMetrics.builder().register();
         MetricsInterceptor metricsInterceptor = new MetricsInterceptor();
@@ -28,7 +35,7 @@ class Main {
         try (Ydb ydb = new Ydb(config.ydbConfig());
              HTTPServer metricsServer = HTTPServer.builder().port(config.metricsConfig().port()).buildAndStart()) {
             ScooterStatusDao scooterStatusDao = new YdbScooterStatusDao("scooter_status", ydb.getCtx());
-            ScootersApiImpl apiImpl = new ScootersApiImpl(scooterStatusDao);
+            ScootersApiImpl apiImpl = new ScootersApiImpl(scooterStatusDao, mapApiClient);
             Server server = ServerBuilder.forPort(config.grpcConfig().port())
                     .addService(ServerInterceptors.intercept(apiImpl, metricsInterceptor))
                     .addService(ProtoReflectionService.newInstance()).build();

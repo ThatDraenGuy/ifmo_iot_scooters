@@ -4,9 +4,10 @@ import "proto/model.proto";
 import "proto/map_model.proto";
 
 service ScootersApi {
-    rpc ping(ScooterApiPingRequest) returns (ScooterApiPingResponse) {};
-    rpc sendTelemetry(ScooterTelemetry) returns (ScooterTelemetryResponse) {};
-    rpc getStatuses(ScooterStatusesRequest) returns (ScooterStatusesResponse) {};
+    rpc ping(ScooterApiPingRequest) returns (ScooterApiPingResponse);
+    rpc sendTelemetry(ScooterTelemetry) returns (ScooterTelemetryResponse);
+    rpc getStatuses(ScooterStatusesRequest) returns (ScooterStatusesResponse);
+    rpc getSpeedLimitedZones(map.GetSpeedLimitedZonesRequest) returns (map.SpeedLimitedZones);
 }
 
 service ScootersMapApi {
