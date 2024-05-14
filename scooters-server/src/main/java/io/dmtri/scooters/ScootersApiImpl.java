@@ -2,6 +2,7 @@ package io.dmtri.scooters;
 
 import io.dmtri.scooters.persistence.ScooterStatusDao;
 import io.dmtri.scooters.prometheus.ScooterApiMetrics;
+import io.dmtri.scooters.utils.VectorLength;
 import io.grpc.Status;
 import io.dmtri.scooters.service.ScootersApiGrpc;
 import io.grpc.stub.StreamObserver;
@@ -20,7 +21,7 @@ public class ScootersApiImpl extends ScootersApiGrpc.ScootersApiImplBase {
     }
 
     private <T, U> void handleFuture(CompletableFuture<T> future, StreamObserver<U> responseObserver,
-            Function<T, U> mappingFunction) {
+                                     Function<T, U> mappingFunction) {
         future.handle((result, exception) -> {
             if (exception != null) {
                 logger.error("Error handling request", exception);
@@ -42,15 +43,16 @@ public class ScootersApiImpl extends ScootersApiGrpc.ScootersApiImplBase {
 
     @Override
     public void sendTelemetry(Model.ScooterTelemetry request,
-            StreamObserver<Model.ScooterTelemetryResponse> responseObserver) {
-        ScooterApiMetrics.statusReceived.inc();
+                              StreamObserver<Model.ScooterTelemetryResponse> responseObserver) {
+        ScooterApiMetrics.statusReceived.labelValues(request.getScooterId()).inc();
+        ScooterApiMetrics.scootersSpeed.observe(VectorLength.calculateLength(request.getSpeed()));
         handleFuture(scooterStatusDao.updateScooter(request), responseObserver,
                 result -> Model.ScooterTelemetryResponse.newBuilder().setSpeedLimit(1000).build());
     }
 
     @Override
     public void getStatuses(Model.ScooterStatusesRequest request,
-            StreamObserver<Model.ScooterStatusesResponse> responseObserver) {
+                            StreamObserver<Model.ScooterStatusesResponse> responseObserver) {
         handleFuture(scooterStatusDao.getScooters(), responseObserver,
                 result -> Model.ScooterStatusesResponse.newBuilder().addAllStatuses(result).build());
     }

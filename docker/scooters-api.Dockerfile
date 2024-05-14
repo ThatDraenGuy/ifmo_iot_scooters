@@ -16,6 +16,7 @@ COPY ./scooters-server/pom.xml /app/scooters-server/pom.xml
 COPY ./scooters-proto-java/pom.xml /app/scooters-proto-java/pom.xml
 RUN mvn clean
 RUN mvn verify --fail-never
+COPY ./scooters-core /app/scooters-core
 COPY ./scooters-server /app/scooters-server
 COPY ./scooters-proto-java /app/scooters-proto-java
 COPY ./proto /app/proto
