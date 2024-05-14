@@ -2,6 +2,9 @@ pub mod scooters {
     tonic::include_proto!("io.dmtri.scooters");
     tonic::include_proto!("io.dmtri.scooters.service");
 }
+pub mod map {
+    tonic::include_proto!("io.dmtri.scooters.map");
+}
 pub mod strategy;
 pub mod utils;
 
